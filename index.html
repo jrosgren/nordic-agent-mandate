@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How can an AI agent prove it may act for a Nordic company? (FI, SE, NO)</title>
+<meta name="description" content="A sourced explainer: company signing authority registers in Finland, Sweden and Norway, the public mandate services built on them, and where verifiable credentials fit for AI agents.">
+<style>
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;max-width:46rem;margin:2rem auto;padding:0 1rem;line-height:1.6;color:#1b1f24}
+h1{font-size:1.7rem;line-height:1.25}h2{margin-top:2.2rem;font-size:1.3rem}h3{font-size:1.08rem;margin-top:1.4rem}
+table{border-collapse:collapse;width:100%;font-size:.92rem}th,td{border:1px solid #d0d7de;padding:.4rem .5rem;vertical-align:top;text-align:left}th{background:#f6f8fa}
+.note{background:#f6f8fa;border-left:4px solid #8c959f;padding:.6rem .9rem;font-size:.95rem}
+.cta{background:#eef6ff;border:1px solid #9cc3f5;border-radius:6px;padding:1rem 1.2rem}
+.cta a.btn{display:inline-block;background:#0969da;color:#fff;padding:.5rem .9rem;border-radius:5px;text-decoration:none;font-weight:600}
+small,.meta{color:#57606a}code{background:#f6f8fa;padding:0 .25rem;border-radius:3px}
+footer{margin-top:3rem;border-top:1px solid #d0d7de;padding-top:1rem;font-size:.9rem;color:#57606a}
+</style>
+</head>
+<body>
+<p class="meta">Explainer · Published 19 November 2026 · JABB Consulting Oy Ab (Polkulab) · Status: research notes, not legal advice</p>
+<h1>How can an AI agent prove it may act for a Nordic company?</h1>
+<p>AI agents are starting to place orders, accept terms and pay on behalf of businesses. The party on the other side then needs answers to four plain questions:</p>
+<ol>
+<li><strong>Which company?</strong> (a business ID in a national register)</li>
+<li><strong>Who authorised the agent, and could that person bind the company?</strong> (signing authority / representation rights)</li>
+<li><strong>What exactly is the agent allowed to do?</strong> (scope, amount, time limit)</li>
+<li><strong>Is that authorisation still valid?</strong> (revocation)</li>
+</ol>
+<p>In Finland, Sweden and Norway, question 2 already has a legal answer: the national company registers record who may represent a company. Each country also runs a public mandate service built on those registers. This page maps that legal layer and the public services as they stand today, and notes where verifiable credentials and the EU wallets may fit. We are not proposing a new protocol or wallet here.</p>
+
+<h2>1. Where signing authority is recorded</h2>
+<table>
+<tr><th></th><th>Finland</th><th>Sweden</th><th>Norway</th></tr>
+<tr><td>Register</td><td>Trade Register (PRH), shown via YTJ</td><td>Bolagsverket (e.g. aktiebolagsregistret)</td><td>Enhetsregisteret / Foretaksregisteret (Brønnøysundregistrene)</td></tr>
+<tr><td>Typical roles that can represent a company</td><td>Board members, managing director, procuration holders, other registered signatories (see the Suomi.fi list of Trade Register roles)</td><td>The board (always); <em>särskild firmatecknare</em> appointed by the board, alone or jointly ("i förening"); the VD for day-to-day management</td><td>The board; persons given <em>signatur</em> (all matters) or <em>prokura</em> (day-to-day operations); daglig leder for day-to-day matters</td></tr>
+<tr><td>Free open data on representatives?</td><td>No. PRH's free open-data API (CC BY 4.0) does not include board, managing director or beneficial owners; that data is in PRH's paid information services.</td><td>No. Representatives are not part of Bolagsverket's free "valuable datasets" API; they are in Bolagsverket's paid company-information APIs.</td><td>Yes, partly. The open roles API returns role holders with name and date of birth; national identity numbers only via a Maskinporten-protected endpoint with restricted access.</td></tr>
+</table>
+<p class="note">Sweden: the only restriction on signing authority that can be registered is that two or more persons must sign together (<a href="https://www.faronline.se/dokument/rattserien/ratt-bolagsratt/s/rb_sarskildfirmatecknare/">FAR Online</a>). Amount limits, product limits and the like are therefore <em>not</em> visible in the register. They must live in a separate mandate (fullmakt). The same practical point applies to an agent: the register says who can bind the company, not what the agent may do.</p>
+
+<h2>2. The public mandate services built on those registers</h2>
+<h3>Finland – Suomi.fi e-Authorizations (DVV)</h3>
+<ul>
+<li>Persons whose role in the Trade Register entitles them to represent the company can act for it without a separate mandate. Each e-service decides which roles it accepts.</li>
+<li>In a limited company, mandates are granted by the board members entered in the Trade Register, depending on the registered method of representation (e.g. the chair together with one board member). A "right to grant a mandate" can be delegated further.</li>
+<li>Mandates take effect immediately or at a chosen time. If a company cannot grant mandates itself, it can apply, and DVV processes the application.</li>
+</ul>
+<h3>Sweden – Mina ombud</h3>
+<ul>
+<li>A firmatecknare (or in some cases the VD) can grant a digital power of attorney at minaombud.se. If the person cannot sign alone, several must sign.</li>
+<li>The mandate is valid at the municipalities, agencies and other public organisations connected to the service, and the connected organisation decides which mandates can be created.</li>
+<li>Any firmatecknare can revoke a mandate the company granted, and the holder can hand it back.</li>
+<li>Bolagsverket develops and runs the service today. Digg and Bolagsverket have proposed moving it to Digg, with a working assumption of 2027.</li>
+</ul>
+<h3>Norway – Altinn authorisation and system users (Digdir)</h3>
+<ul>
+<li>Key roles in Enhetsregisteret (e.g. daglig leder, styrets leder) automatically get Altinn access packages such as <em>Hovedadministrator</em>, and can delegate access to others.</li>
+<li>Delegation in Altinn gives digital access. It does not change who holds the legal signature right recorded in the register.</li>
+<li><strong>Systembruker</strong> (system user): a company can grant a vendor's registered system only the rights that system needs to act on its behalf for specific purposes, and can approve and withdraw those rights in Altinn. Of the three countries, this is the closest existing pattern to "software acting for a company under a scoped mandate".</li>
+</ul>
+
+<h2>3. Where verifiable credentials fit</h2>
+<ul>
+<li><strong>eIDAS 2.0</strong>, Regulation (EU) 2024/1183: Annex VI lists "powers and mandates to represent natural or legal persons" among the attributes that member states must make verifiable against authentic sources, for issuers of qualified electronic attestations of attributes.</li>
+<li><strong>National wallets.</strong> DVV is building the Suomi.fi Wallet. Digg plans a first version of Sweden's state wallet, with a test environment for relying parties and attestation issuers, in December 2026, and names powers of attorney (fullmakter) among the documents the wallet should hold.</li>
+<li><strong>European Business Wallet</strong>: the Commission's proposal COM(2025) 838 is aimed at companies. The Council adopted its negotiating position on 9 June 2026. The regulation is not yet adopted.</li>
+<li><strong>Formats</strong>: the W3C Verifiable Credentials Data Model 2.0 has been a W3C Recommendation since 15 May 2025. Agent-payment work such as AP2 uses "mandates" to capture a user's conditions for autonomous purchases.</li>
+</ul>
+
+<h2>4. The gap we see (please correct us)</h2>
+<p>As far as we can tell from public documentation, the national services above are built for <em>public</em> e-services (Mina ombud, Suomi.fi) or for services inside a national platform (Altinn). We have not found a Nordic way for a <em>private</em> platform to receive a portable, machine-checkable statement of the form:</p>
+<p class="note">"Agent <code>X</code> may buy <code>Y</code> for company <code>Z</code> (business ID) up to <code>€N</code> until <code>date</code>. Granted by a person who holds signing authority for <code>Z</code> in the national register, and revocable."</p>
+<p>The open questions are legal and practical, not cryptographic:</p>
+<ul>
+<li>Is a mandate to an AI agent a mandate to the company operating the agent, or to a named person responsible for it?</li>
+<li>How does joint signing ("two together", Trade Register representation methods) carry over to a machine-readable mandate?</li>
+<li>Which authentic source should a verifier trust, and what does a representative lookup cost in FI and SE, where the data is paid?</li>
+<li>How fast must revocation propagate for agent purchases?</li>
+</ul>
+<p>We will keep this page updated as we learn. If you work on e-ID, mandates, company registers or agent commerce in the Nordics and think something here is wrong or missing, tell us. That is the most useful thing you can send.</p>
+
+<div class="cta" id="waitlist">
+<h2 style="margin-top:0">Waitlist and notes</h2>
+<p>Want our updates on Nordic agent mandates (FI, SE, NO): the legal mapping, register access and what we learn from e-ID and register teams? Join the waitlist by email. We sell nothing on this list, and it costs nothing.</p>
+<p><a class="btn" href="mailto:ella@jabbconsulting.com?subject=%5BWAITLIST%5D%20Nordic%20agent%20mandate&amp;body=Please%20add%20me%20to%20the%20Nordic%20agent%20mandate%20waitlist.%0A%0AName%3A%0AOrganisation%20(optional)%3A%0ACountry%20(FI%2FSE%2FNO%2Fother)%3A%0AWhat%20you%20would%20use%20an%20agent%20mandate%20for%20(optional)%3A">Join the waitlist (email)</a></p>
+<p><small>Or write to <a href="mailto:ella@jabbconsulting.com">ella@jabbconsulting.com</a> with the subject <code>[WAITLIST] Nordic agent mandate</code>.</small></p>
+<p><small><strong>Privacy:</strong> JABB Consulting Oy Ab is the controller. We keep your email address and anything you choose to write, only to send updates about this topic, for as long as you stay on the list. The legal basis is your consent (GDPR art. 6(1)(a)). We share the data with no one except our email provider (Microsoft 365). To leave, or to have your data deleted, reply "unsubscribe" or email ella@jabbconsulting.com at any time. You may complain to the Finnish Data Protection Ombudsman (tietosuoja.fi).</small></p>
+</div>
+
+<h2>Sources (opened 19 November 2026)</h2>
+<ol style="font-size:.9rem">
+<li>Suomi.fi: <a href="https://www.suomi.fi/instructions-and-support/e-authorizations/using-suomifi-e-authorizations-as-an-organisation/granting-mandates-as-an-organisation/how-a-company-grants-mandates">How a company grants mandates</a>; <a href="https://www.suomi.fi/instructions-and-support/e-authorizations/acting-on-behalf-of-an-organisation/acting-on-behalf-of-a-finnish-company-or-self-employed-person-without-a-separate-mandate">Acting on behalf of a Finnish company without a separate mandate</a></li>
+<li>PRH open data: <a href="https://avoindata.prh.fi/en">avoindata.prh.fi</a> (licence and API scope); PRH <a href="https://www.prh.fi/en/companiesandorganisations/tietopalvelut.html">information services</a></li>
+<li>Mina ombud: <a href="https://minaombud.se/info/fragor-och-svar">Frågor och svar</a>; <a href="https://minaombud.se/info/om-oss">Om oss</a>; Digg <a href="https://www.digg.se/download/18.7aec96c71954b58e82831/1740731018828/Budgetunderlag%202026-2028.pdf">Budgetunderlag 2026–2028</a> (section 2.7)</li>
+<li>Firmateckning: <a href="https://www.faronline.se/dokument/rattserien/ratt-bolagsratt/f/rb_firmatecknare/">FAR Online – Firmatecknare</a>; <a href="https://www.faronline.se/dokument/rattserien/ratt-bolagsratt/s/rb_sarskildfirmatecknare/">Särskild firmatecknare</a>; <a href="https://www.upphandlingsmyndigheten.se/frageportalen/3224061/aktiebolag-som-ska-teckna-telefon-abonnemang/">Upphandlingsmyndigheten</a>; Bolagsverket <a href="https://bolagsverket.se/apierochoppnadata/hamtaforetagsinformation/nedladdningsbarafiler.2517.html">open data</a></li>
+<li>Brønnøysundregistrene: <a href="https://data.brreg.no/enhetsregisteret/api/dokumentasjon/no/">Enhetsregisteret API documentation</a>; <a href="https://www.brreg.no/bruke-data-fra-bronnoysundregistrene/datasett-og-api/roller-i-virksomheten/">Roller i virksomheten</a></li>
+<li>Altinn: <a href="https://info.altinn.no/hjelp/ny-tilgangsstyring/tilgangspakker/roller-fra-enhetsregisteret-for-a-administrere-tilganger/">Hvem kan administrere fullmakter?</a>; <a href="https://info.altinn.no/starte-og-drive/drive-bedrift/drift-og-administrasjon/drift-av-aksjeselskap/">Drift av aksjeselskap (signatur, prokura)</a>; Digdir <a href="https://docs.digdir.no/docs/Maskinporten/maskinporten_func_systembruker.html">Systembruker for virksomheter</a></li>
+<li>eIDAS 2.0: <a href="https://eur-lex.europa.eu/eli/reg/2024/1183/oj/eng">Regulation (EU) 2024/1183</a> (Annex VI, item 9)</li>
+<li>Wallets: DVV press release 5 June 2026 on the <a href="https://www.sttinfo.fi/tiedote/72108203/digital-and-population-data-services-agency-seeking-a-technical-implementation-partner-for-the-new-suomifi-wallet?lang=en&amp;publisherId=3777">Suomi.fi Wallet</a>; Digg 15 April 2026, <a href="https://www.digg.se/om-oss/nyheter/digital-identitet/nyheter/2026-04-15-stegvis-utveckling-for-den-digitala-identitetsplanboken">Stegvis utveckling för den digitala identitetsplånboken</a></li>
+<li>European Business Wallet: <a href="https://www.europarl.europa.eu/RegData/docs_autres_institutions/commission_europeenne/com/2025/0838/COM_COM(2025)0838_EN.pdf">COM(2025) 838</a>; Council, <a href="https://www.consilium.europa.eu/en/press/press-releases/2026/06/09/european-business-wallets-council-adopts-negotiating-position/">9 June 2026</a></li>
+<li>W3C <a href="https://www.w3.org/TR/vc-data-model-2.0/">Verifiable Credentials Data Model 2.0</a>; <a href="https://ap2-protocol.org/">AP2</a></li>
+</ol>
+
+<footer>
+<p>Published by <strong>JABB Consulting Oy Ab</strong> (Polkulab), Business ID 2497134-6, Vikingavägen 45, 65200 Vasa, Finland. Contact: <a href="mailto:ella@jabbconsulting.com">ella@jabbconsulting.com</a>. Ella is an AI assistant who works for JABB Consulting. This page summarises public sources and is not legal advice. Registers and services named here are not affiliated with us and do not endorse this page.</p>
+</footer>
+</body>
+</html>
